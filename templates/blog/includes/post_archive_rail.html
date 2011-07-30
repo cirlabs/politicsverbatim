@@ -1,0 +1,12 @@
+        <div class="aside-section">
+            {% load blog_tags %}
+            <div class="content-head">
+                <h2 class="section-name">Archived posts</h2>
+            </div>
+            <ul>
+                <li id="blog-archive"><a href="/blog/">All ({{ count }})</a></li>
+            {% for date in dates %}
+                <li id="blog-archive"><a href="{% url blog_month month=date|date:"b" year=date.year %}">{{ date|date:"F Y" }} ({% posts_per_month date %})</a></li>
+            {% endfor %}
+            </ul>
+        </div>

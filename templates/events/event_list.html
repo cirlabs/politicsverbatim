@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load event_tags %}
+{% block title %}Politics Verbatim | Events{% endblock %}
+{% block extrahead %}
+<link rel="alternate" type="application/rss+xml" title="Politics Verbatim | Events" href="{% url events_feed %}" />
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key={{ google_api_key }}" type="text/javascript"></script>
+{% include "events/includes/big_event_map.html" %}
+{% endblock %}
+
+{% block content %}
+{% block bodytag %}<body onload="initialize()" onunload="GUnload()">{% endblock %}
+<div id="content-container">
+    <div id="content">
+
+        <h2>Upcoming events</h2>
+        <div id="map_canvas" style="width: 560px; height: 500px"></div>
+        <br />
+        <ul>
+            {% for event in paginated_events.object_list %}
+            <div id="event-list-item">
+            <li><a id="event-headline" href="{% url event_detail id=event.id %}">{{ event }}</a></li>
+                 <ul id="event-detail-ul">
+                    <li class="event-detail"><strong>Date and time:</strong> {{ event.event_datetime|date:"N j, Y, P"  }}</span>
+                    <li class="event-detail"><strong>Location:</strong> {% if event.address %}{{ event.address }}, {% endif %}{{ event.city|capfirst }}, {{ event.state|upper }}</span>
+                    <li class="event-detail"><strong>Description:</strong> {{ event.description }}</span>
+                </ul>
+            </div>
+            {% endfor %}
+        </ul>
+        
+            {% if paginated_events.has_other_pages %}
+            <div class="pagination">
+                <span class="step-links">
+                    <div class="page-box" id="prev-btn">
+                    {% if excerpts.has_previous %}
+		        <a href="?page={{ paginated_events.previous_page_number }}">prev</a>
+                    {% endif %}
+		    </div>
+
+                    <div class="page-box" id="current">
+                        <h5>Page {{ paginated_events.number }} of {{ paginated_events.paginator.num_pages }}</h5>
+                    </div>
+                    
+                    <div class="page-box" id="next-btn">
+                    {% if excerpts.has_next %}
+                        <a href="?page={{ paginated_events.next_page_number }}">next</a>
+                    {% endif %}
+                    </div>
+
+               </span>
+            </div><!-- end pagination -->
+            {% endif %}
+
+    </div>
+    
+    <div id="aside">        
+    {% include 'events/includes/upcoming_events_rail.html' %}
+
+    </div>
+</div>
+    
+
+{% endblock %}

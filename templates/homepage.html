@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load blog_tags %}
+{% block extrahead %}
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key={{ google_api_key }}" type="text/javascript"></script>
+{% include "base/includes/upcoming_event_map.html" %}
+{% endblock %}
+
+{% block content %}
+{% block bodytag %}<body onload="initialize()" onunload="GUnload()">{% endblock %}
+		<div id="content-container">
+		    <div id="content">
+
+                        <div id="homepage-posts">
+                            <a href="{% url blog_detail slug=featured_post.slug %}"><img src="{% if featured_post.image %}{{ featured_post.image.url }}{% else %}http://californiawatch.s3.amazonaws.com:80/ontherecord/posts/images/brown-whitman_1.jpg{% endif %}" width="550px"/></a>
+                            <h3><a href="{% url blog_detail slug=featured_post.slug %}">{{ featured_post.headline }}</a></h3>
+                            {% truncatewords_html_readmore featured_post.body 100 featured_post %}
+                            <p id="more-posts">More posts</p>
+                            <ul class="bulleted">
+                                {% for post in posts %}
+                                <li><a href="{% url blog_detail slug=post.slug %}">{{ post.headline }}</a></li>
+                                {% endfor %}
+                                <li><a href="/blog/">See all posts</a></li>
+                            </ul>
+                        </div><!-- end homepage-posts -->
+		        
+		        <div id="excerpt-container">
+		        <div class="content-head">
+		        	<h2>Newest excerpts</h2>
+		        </div>
+                            {% for excerpt in excerpts %}
+		            <div class="excerpt-list">
+
+		            	<div class="excerpt-left">
+				            	<div class="photo">
+		            		        <a href="{% url excerpt_detail object_id=excerpt.id %}">
+			                    	<img class="candidate-photo" src="{{ excerpt.campaign.image.url }}" border="0" />
+			                    	{% if excerpt.document.source.image %}<img class="source-icon" src="{{ excerpt.document.source.image.url }}" border="0"/>{% endif %}
+						</a>
+				                </div>
+		            	</div>
+		               	<div class="excerpt-right">
+
+		               		<h5 class="can-name">{{ excerpt.campaign }}</h5>
+		               		<h5 class="can-name">/</h5>
+		               		<span class="date">{{ excerpt.document.source_date|date:"N j, Y" }}</span>
+				        <span class="like" style="float:right;">
+				            <fb:share-button href="{{ excerpt.get_facebook_url }}" type="button"></fb:share-button>
+				            <div class="topsy_widget_data" style="margin-left:80px; margin-top:1px;"><script type="text/javascript">topsyWidgetPreload({ "url": "{{ excerpt.get_facebook_url }}", "title": "{{ excerpt.text|truncatewords:15 }}", "theme": "jade", "nick": "politicsv" });</script></div>
+				        </span>
+                                        <p>{{ excerpt.text }}</p>
+			                <span class="excerpt-details">
+                                                <strong>Source:</strong> {% if excerpt.document.url %}<a href="{{ excerpt.document.url }}" target="_blank">{{ excerpt.document.source }}</a>{% endif %}
+                                                <br />
+			                	<strong>Tags:</strong>
+                                                {% for tag in excerpt.category.all %}
+			                	<a href="{% url topic_detail slug=tag.slug %}">{{ tag.name }}</a>{% if not forloop.last %},{% else %}{% if excerpt.type.all and excerpt.category.all %},{% endif %}{% endif %}
+                                                {% endfor %}
+                                                {% for tag in excerpt.type.all %}
+			                	<a href="{% url type_detail slug=tag.slug %}">{{ tag.name }}</a>{% if not forloop.last %},{% endif %}
+                                                {% endfor %}
+			                </span>
+			            </div>
+
+		       		</div><!-- end excerpt-list -->
+                                {% endfor %}
+		       		        
+		        </div><!-- end content -->
+		    </div><!-- end content-container -->
+	
+	    <div id="aside">
+                {% include "base/includes/right_rail_about.html" %}
+                                
+                {% include "base/includes/excerpt_search.html" %}
+
+	        {% include "base/includes/right_rail_map.html" %}
+                
+                {% include "base/includes/right_rail_tweets.html" %}
+
+                {% include "base/includes/right_rail_sunlightcam.html" %}
+                
+	    </div><!-- aside -->
+	</div><!-- end container -->
+{% endblock %}

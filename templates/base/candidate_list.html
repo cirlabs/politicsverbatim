@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Politics Verbatim | Candidates {% endblock %}
+{% block content %}
+<div id="content-container">
+    <div id="content">
+        <h2>Candidates we're tracking</h2>
+        <ul style="margin-left:18px;">
+            {% for candidate in object_list %}
+            <li style="margin-bottom:15px;"><a href="{% url candidate_detail slug=candidate.slug %}">{{ candidate }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    
+    <div id="aside">
+    
+    {% include "base/includes/excerpt_search.html" %}
+    
+    </div>
+</div>
+
+{% endblock %}

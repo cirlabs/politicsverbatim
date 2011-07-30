@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Politics Verbatim | Error{% endblock %}
+{% block content %}
+<div id="content-container">
+    <div id="content">
+    <div class="content-head">
+        <h2>Now you done it ...</h2>
+    </div>        
+        <p>Uh-oh. Something's busted. <a href="/">Move along</a> -- nothing to see here.</p>
+    </div>
+    
+    <div id="aside">
+    
+      {% include "base/includes/excerpt_search.html" %}
+    
+    </div>
+</div>
+{% endblock %}

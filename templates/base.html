@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml" xml:lang="en" lang="en">
+    <head profile="http://www.w3.org/2005/10/profile">
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="author" content="California Watch" />
+	<meta name="copyright" content="&copy; California Watch/Center for Investigative Reporting" />
+	<meta name="language" content="EN" />
+	<meta name="audience" content="All" />
+	<meta name="publisher" content="California Watch" />
+
+	<meta name="distribution" content="global" />
+	<meta name="robots" content="index,follow" />
+	<meta name="siteinfo" content="http://www.politicsverbatim.org/robots.txt" />
+	<meta name="title" content="Politics Verbatim | Keeping politics on the record" />
+        <meta name="description" content="Brought to you by California Watch, Politics Verbatim is a project to catalog, analyze and report on the rhetoric of political campaigns, starting with the 2010 California governor's race." />
+	<meta name="keywords" content="California Watch, Center for Investigative Reporting, CIR, California, California governor's race, Meg Whitman, Jerry Brown, politics, Los Angeles politics, Sacramento politics, San Francisco politics, San Diego politics" />
+	<link rel="icon" type="image/png" href="/media/images/favicon.png" />
+	<title>{% block title %}Politics Verbatim | Keeping politics on the record{% endblock %}</title>
+	<link rel="stylesheet" href="/media/css/verbatim.css" type="text/css"/>
+		
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" language="javascript" type="text/javascript"></script>
+	<script src="/media/js/verbatim.js" language="javascript" type="text/javascript"></script>
+	
+	{% block extrahead %}{% endblock %}
+
+	<script type="text/javascript" src="http://cdn.topsy.com/topsy.js?init=topsyWidgetCreator"></script>
+
+	<script type="text/javascript">
+
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-2147301-5']);
+	    _gaq.push(['_trackPageview']);
+
+	    (function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	    })();
+
+	</script>	
+    </head>
+
+    {% block bodytag %}<body>{% endblock %}
+    <div id="fb-root"></div>
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({appId: '{{ facebook_app_id }}', status: true, cookie: true,
+                 xfbml: true});
+      };
+      (function() {
+        var e = document.createElement('script');
+        e.type = 'text/javascript';
+        e.src = document.location.protocol +
+          '//connect.facebook.net/en_US/all.js';
+        e.async = true;
+        document.getElementById('fb-root').appendChild(e);
+      }());
+    </script>
+
+	<div id="container">
+	    
+	    <div id="header">
+		    <div id="left">
+			<a href="/"><img src="/media/images/logo.png" alt="Politics Verbatim logo" border=0/></a><br />
+			<div class="logo-subhed">Tracking who says what in the California governor's race</div>
+		    </div>
+		    <div id="right">
+			<p class="tagline"><a href="http://www.californiawatch.org" target="_blank"><img src="/media/images/cw_logo_small.png" style="border:0;" alt="California Watch logo"></a><br />A project of the Center for Investigative Reporting</p>
+		    </div>
+	    </div><!-- end header -->
+	    
+	    <div id="navigation">
+		<ul>
+		    <li class="active"><a href="/">Home</a></li>
+		    <li><a href="/about/">About</a></li>
+		    <li><a href="/candidates/">Candidates</a>
+			<ul>
+			    {% for campaign in campaigns %}
+			    <li><a href="{% url candidate_detail slug=campaign.slug %}">{{ campaign.name }}</a></li>
+			    {% endfor %}
+			</ul>
+		    </li>
+		    <li><a href="/topics/">Issues</a>
+		    	<ul>
+			    {% for category in nav_categories %}
+			    <li><a href="{% url topic_detail slug=category.slug %}">{{ category.name }}</a></li>
+			    {% endfor %}
+			    <li><a href="/topics/">More ...</a></li>
+			</ul>
+		    </li>
+		    <li><a href="/events/">Events</a></li>
+		    <li><a href="/contact/">Contact us</a></li>
+		</ul>
+	    </div><!-- end navigation -->
+     {% block content %}{% endblock %}
+	<div id="footer"> 
+		<div id="footer-left"> 
+		    <h3>Contact us</h3> 
+		    <p>If you have any questions or comments, you'd like to learn how to help, or you're interested in using Politics Verbatim in your local community, we'd love to hear from you.</p> 
+		    <br /> 
+		    <p>Please direct any questions or comments to <a href="http://www.californiawatch.org/user/chase-davis">Chase Davis</a> of California Watch.</p> 
+		</div> 
+		<div id="footer-middle"> 
+		    <h3 >We're social</h3> 
+		    <div class="follow">
+		    	<a href="http://www.facebook.com/pages/Politics-Verbatim/122899441084577" target="_blank">
+		    		<img src="/media/images/facebook_footer.png" height="35px" width="35px" style="border:0;" />
+		    		<h4>Follow us on Facebook</h4>
+		    	</a>
+		    </div> 
+		    <div class="follow">
+		    	<a href="http://www.twitter.com/politicsv/" target="_blank">
+		    		<img src="/media/images/twitter_footer.png" height="35px" width="35px" style="border:0;" />
+		    		<h4>Follow us on Twitter</h4>
+		    	</a> 
+		    </div>
+		    <div class="follow">
+		    	<a href="/feeds/">
+		    		<img src="/media/images/rss_footer.png" height="35px" width="35px" style="border:0;" />
+		    		<h4>Subscribe to our RSS feeds</h4>
+		    	</a> 
+		    </div>
+		</div>
+	    	<div id="copyright"> 
+			<div class="copyright-info-logo"><img src="/media/images/logo_foot.png"></div> 
+	    		<div class="copyright-info">&copy; 2010 <a href="http://www.californiawatch.org" target="_blank">California Watch/CIR</div> 
+	    		<div class="copyright-info"><a href="http://www.upstatement.com/" target="_blank">Web Design by<img src="/media/images/upstatement_logo.png" style="border:0;"/></a></div> 
+	    	</div> 
+	    </div><!-- end footer --> 	
+    <div class="clear"></div>
+
+    </body>
+
+</html>

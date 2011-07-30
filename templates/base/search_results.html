@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Politics Verbatim | Search results{% endblock %}
+{% block extrahead %}
+{% endblock %}
+
+{% block content %}
+<div id="content-container">
+    <div id="content">
+ 	    <div class="content-head">
+                <h2>Search results</h2>
+	    </div>
+            {% if no_results %}
+            <p>No results for: {{ type }} given by {{ campaign }} about {{ topic|lower }} in {{ location }}</p>
+            {% else %}
+            {% for excerpt in excerpts.object_list %}
+	    <div class="excerpt-list">
+		<div class="excerpt-left">
+		    <div class="photo">
+			<a href="{% url excerpt_detail object_id=excerpt.id %}">
+			<img class="candidate-photo" src="{{ excerpt.campaign.image.url }}" border="0" />
+			{% if excerpt.document.source.image %}<img class="source-icon" src="{{ excerpt.document.source.image.url }}" border="0" />{% endif %}
+			</a>
+		    </div>
+		</div>
+		<div class="excerpt-right">
+    
+			<h5 class="can-name">{{ excerpt.campaign }}</h5>
+			<h5 class="can-name">/</h5>
+			<span class="date">{{ excerpt.document.source_date|date:"N j, Y" }}</span>
+			<span class="like" style="float:right;">
+			    <fb:share-button href="{{ excerpt.get_facebook_url }}" type="button"></fb:share-button>
+			    <div class="topsy_widget_data" style="margin-left:80px; margin-top:1px;"><script type="text/javascript">topsyWidgetPreload({ "url": "{{ excerpt.get_facebook_url }}", "title": "{{ excerpt.text|truncatewords:15 }}", "theme": "jade", "nick": "politicsv" });</script></div>
+			</span>
+		    <p>{{ excerpt.text }}</p>
+		    <span class="excerpt-details">
+                        <strong>Source:</strong> {% if excerpt.document.url %}<a href="{{ excerpt.document.url }}" target="_blank">{{ excerpt.document.source }}</a>{% endif %}
+                        <br />
+			<strong>Tags:</strong>
+                        {% for tag in excerpt.category.all %}
+			<a href="{% url topic_detail slug=tag.slug %}">{{ tag.name }}</a>{% if not forloop.last %},{% else %}{% if excerpt.type.all and excerpt.category.all %},{% endif %}{% endif %}
+                        {% endfor %}
+                        {% for tag in excerpt.type.all %}
+			<a href="{% url type_detail slug=tag.slug %}">{{ tag.name }}</a>{% if not forloop.last %},{% endif %}
+                        {% endfor %}
+		    </span>
+		</div>
+	    </div><!-- end excerpt-list -->
+            {% endfor %}
+
+            <br />
+            {% if excerpts.has_other_pages %}
+            <div class="pagination">
+                <span class="step-links">
+                    <div class="page-box" id="prev-btn">
+                    {% if excerpts.has_previous %}
+		        <a href="?{{ get }}&page={{ excerpts.previous_page_number }}">prev</a>
+                    {% endif %}
+		    </div>
+
+                    <div class="page-box" id="current">
+                        <h5>Page {{ excerpts.number }} of {{ excerpts.paginator.num_pages }}</h5>
+                    </div>
+                    
+                    <div class="page-box" id="next-btn">
+                    {% if excerpts.has_next %}
+                        <a href="?{{ get }}&page={{ excerpts.next_page_number }}">next</a>
+                    {% endif %}
+                    </div>
+
+               </span>
+            </div><!-- end pagination -->
+            {% endif %}
+            {% endif %}
+
+
+    </div><!-- end content -->
+    
+    <div id="aside">
+        {% include "base/includes/excerpt_search.html" %}
+	
+        {% if not no_results %}
+        {% include "base/includes/right_rail_cloud.html" %}
+        {% endif %}
+        
+    </div><!-- end aside -->
+    
+</div>
+
+{% endblock %}

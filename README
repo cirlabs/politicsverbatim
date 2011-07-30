@@ -1,0 +1,11 @@
+A very quickly thrown-together repo for Politics Verbatim, based on Django 1.2. Update and cleanup to come, but feel free to pick through it of anything you might find useful!
+
+Please direct questions to Chase Davis at cdavis@cironline.org
+
+External dependencies:
+- Haystack
+- South
+- django-tinymce
+- geopy (easy_install geopy)
+- twitter (http://code.google.com/p/python-twitter/)
+- python-bitly: svn checkout http://python-bitly.googlecode.com/svn/trunk/ python-bitly-read-only

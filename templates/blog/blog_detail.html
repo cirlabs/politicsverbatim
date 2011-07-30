@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load blog_tags %}
+{% block title %}Politics Verbatim | {{ object.headline }}{% endblock %}
+
+{% block content %}
+<div id="content-container">
+    <div id="content">
+        <h2>{{ object.headline }}</h2>
+        <div class="blog-authorline">By <strong>{{ object.author.first_name }} {{ object.author.last_name }}</strong> on {{ object.publication_date|date:"N j, Y" }} at {{ object.publication_date|date:"P" }}</div>
+        <div class="blog-text">{{ object.body|safe }}</div>
+    </div>
+    
+    <div id="aside">
+        {% include 'blog/includes/post_archive_rail.html' %}
+
+        {% include "base/includes/right_rail_10questions.html" %}
+
+        {% include "base/includes/right_rail_sunlightcam.html" %}
+    </div>
+</div>
+
+{% endblock %}

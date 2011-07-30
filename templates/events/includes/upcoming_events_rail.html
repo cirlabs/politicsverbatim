@@ -1,0 +1,12 @@
+        <div class="aside-section">
+            {% load event_tags %}
+            <div class="content-head">
+                <h2 class="section-name">Browse appearances</h2>
+            </div>
+            <ul>
+                <li id="upcoming-event"><a href="/events/">Upcoming</a></li>
+            {% for date in dates %}
+                <li id="upcoming-event"><a href="{% url event_month month=date|date:"m" year=date.year %}">{{ date|date:"F Y" }} ({% events_per_month date %})</a></li>
+            {% endfor %}
+            </ul>
+        </div>

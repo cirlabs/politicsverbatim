@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load blog_tags %}
+{% block title %}Politics Verbatim | Blog{% endblock %}
+{% block extrahead %}
+<link rel="alternate" type="application/rss+xml" title="Politics Verbatim | Blog" href="{% url blog_feed %}" />
+{% endblock %}
+{% block content %}
+<div id="content-container">
+    <div id="content">
+        <h2>Politics Verbatim blog</h2>
+        <ul>
+            {% for post in object_list %}
+            <div id="blog-list">
+              <div class="blog-head"><a href="{% url blog_detail slug=post.slug %}">{{ post.headline }}</a></div>
+              <div class="blog-authorline">By <strong>{{ post.author.first_name }} {{ post.author.last_name }}</strong> on {{ post.publication_date|date:"N j, Y" }} at {{ post.publication_date|date:"P" }}</div>
+              <div class="blog-text">{% truncatewords_html_readmore post.body 100 post %}</div>
+            </div>
+            {% endfor %}
+        </ul>
+        
+            {% if paginator.has_other_pages %}
+            <div class="pagination">
+                <span class="step-links">
+                    <div class="page-box" id="prev-btn">
+                    {% if paginator.has_previous %}
+		        <a href="?page={{ paginator.previous_page_number }}">prev</a>
+                    {% endif %}
+		    </div>
+
+                    <div class="page-box" id="current">
+                        <h5>Page {{ paginator.number }} of {{ paginator.paginator.num_pages }}</h5>
+                    </div>
+                    
+                    <div class="page-box" id="next-btn">
+                    {% if excerpts.has_next %}
+                        <a href="?page={{ paginator.next_page_number }}">next</a>
+                    {% endif %}
+                    </div>
+
+               </span>
+            </div><!-- end pagination -->
+            {% endif %}
+
+    </div>
+    
+    <div id="aside">
+        {% include 'blog/includes/post_archive_rail.html' %}
+
+        {% include "base/includes/right_rail_10questions.html" %}
+  
+        {% include "base/includes/right_rail_sunlightcam.html" %}
+
+    </div>
+        
+</div>
+
+{% endblock %}

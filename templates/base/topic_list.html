@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Politics Verbatim | Topics {% endblock %}
+{% block content %}
+<div id="content-container">
+    <div id="content">
+        <h2>Our issue guides</h2>
+        <ul style="margin-left:18px;">
+            {% for topic in object_list %}
+            <li style="margin-bottom:15px;"><a href="{% url topic_detail slug=topic.slug %}">{{ topic }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    
+    <div id="aside">
+    
+    {% include "base/includes/excerpt_search.html" %}
+    
+    </div>
+</div>
+
+{% endblock %}

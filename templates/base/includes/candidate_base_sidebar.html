@@ -1,0 +1,30 @@
+        <div class="aside-section">
+            <h3>Search options</h3>
+            <p>Various search options will go here and include ...</p>
+            <ul>
+                <li>Candidate/issue search</li>
+                <li>Geography search</li>
+                <li>Date search</li>
+            </ul>
+        </div>
+        
+        <div class="aside-section">
+            <h3>Upcoming appearances</h3>
+            <div id="map_canvas" style="width: 300px; height: 300px"></div>
+        </div>
+        
+        <div class="aside-section">
+            <h3>Tag cloud</h3>
+            <div id="cloud-rail">{{ cloud }}</div>
+        </div>
+
+        <div class="aside-section">
+            <h3>Recent tweets</h3>
+            <div id="tweet-rail">
+                <ul>
+                    {% for tweet in tweets %}
+                    <li><a href="http://www.twitter.com/{{ tweet.twitter_user.screen_name }}">{{ tweet.twitter_user.screen_name }}</a>: {{ tweet.text }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>

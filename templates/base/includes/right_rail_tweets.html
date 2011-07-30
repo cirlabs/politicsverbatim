@@ -1,0 +1,24 @@
+	        <div class="aside-section">
+	            <div class="content-head">
+	            	<h2 class="section-name">Recent tweets</h2>
+
+	            </div>
+	            <div id="tweet-rail">
+	                <ul>
+                            {% for tweet in tweets %}
+	                    <li>
+		                    <div class="photo">
+		                    	<img src="{{ tweet.twitter_user.image.url }}" />
+		                    </div>
+		                    <div class="tweet">
+		                  		<a class="twitter-name" href="http://www.twitter.com/{{ tweet.twitter_user.screen_name }}/">{{ tweet.twitter_user.screen_name }}</a>: {{ tweet.text }}
+		                    </div>
+
+	                    </li>
+                            {% endfor %}
+	                </ul>
+	            </div><!-- end tweet-rail -->
+	            <div id="more-tweets">
+                        <h5>More</h5>
+	            </div>
+	        </div><!-- aside-section -->

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Politics Verbatim | Not found{% endblock %}
+{% block content %}
+<div id="content-container">
+    <div id="content">
+    <div class="content-head">
+        <h2>Not found</h2>
+    </div>        
+        <p>Politicians say a lot of things, but apparently not what you were looking for. Head back <a href="/">Home</a> and try again!</p>
+    </div>
+    
+    <div id="aside">
+    
+      {% include "base/includes/excerpt_search.html" %}
+    
+    </div>
+</div>
+{% endblock %}

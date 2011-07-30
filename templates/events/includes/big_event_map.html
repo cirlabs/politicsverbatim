@@ -1,0 +1,70 @@
+<script type="text/javascript">
+    function initialize() {
+        
+    var iconBlue = new GIcon(); 
+    iconBlue.image = 'http://labs.google.com/ridefinder/images/mm_20_blue.png';
+    iconBlue.shadow = 'http://labs.google.com/ridefinder/images/mm_20_shadow.png';
+    iconBlue.iconSize = new GSize(12, 20);
+    iconBlue.shadowSize = new GSize(22, 20);
+    iconBlue.iconAnchor = new GPoint(6, 20);
+    iconBlue.infoWindowAnchor = new GPoint(5, 1);
+
+    var iconRed = new GIcon(); 
+    iconRed.image = 'http://labs.google.com/ridefinder/images/mm_20_red.png';
+    iconRed.shadow = 'http://labs.google.com/ridefinder/images/mm_20_shadow.png';
+    iconRed.iconSize = new GSize(12, 20);
+    iconRed.shadowSize = new GSize(22, 20);
+    iconRed.iconAnchor = new GPoint(6, 20);
+    iconRed.infoWindowAnchor = new GPoint(5, 1);
+    
+    var gicons = [];
+    gicons["blue"] = iconBlue;
+    gicons["red"] = iconRed;
+
+    if (GBrowserIsCompatible()) {
+        var map = new GMap2(document.getElementById("map_canvas"));
+        map.setCenter(new GLatLng(37.4419, -120.1419), 6);
+        map.addControl(new GLargeMapControl());
+        loadPoints();
+    }
+
+    function createMarker(point,html,icontype) {
+        var marker = new GMarker(point, gicons[icontype]);
+        GEvent.addListener(marker, "click", function() {
+          marker.openInfoWindowHtml(html);
+        });
+        return marker;
+    }
+      
+    function loadPoints() {
+        var events = [
+            {% for event in all_events %}
+            [{{ event.lat }}, {{ event.lng }}, '<a href="{% url event_detail id=event.id %}">{{ event.title }}</a>', '{{ event.candidate.slug }}', '{{ event.event_datetime|date:"N j, Y" }}', '{{ event.event_datetime|date:"P" }}', '{{ event.address|capfirst }} {{ event.city|capfirst }}, {{ event.state|upper }}'],
+            {% endfor %}
+        ]
+
+        map.clearOverlays();
+        var bounds = new GLatLngBounds();
+
+        for (var i = 0; i < events.length; i++) {
+            var lat = events[i][0];
+            var lng = events[i][1];
+            var title = events[i][2];
+            var candidate = events[i][3];
+            var date = events[i][4];
+            var time = events[i][5];
+            var address = events[i][6];
+
+            if(candidate == 'meg-whitman'){
+                var iconcolor = 'red';
+            } else {
+                var iconcolor = 'blue';
+            }
+
+            var point = new GLatLng(lat, lng);
+            var marker = createMarker(point, '<div id="map-bubble"><strong>' + title + '</strong><ul><li><strong>Date:</strong> ' + date + '</li><li><strong>Time:</strong> ' + time + '</li><li><strong>Place:</strong> ' + address + '</li></ul>' + '</div>', iconcolor)
+            map.addOverlay(marker);
+        }
+    }
+    }
+</script>

@@ -1,0 +1,217 @@
+<html>
+    <head>
+        <style type="text/css">
+            * {
+                    margin:0;
+                    padding: 0;
+            }
+            body {
+                    background-color: #FFFFFF; 
+                    font-family:Helvetica, Arial, _sans;
+            }
+            body p {
+                    font-size: 13px;
+                    margin-bottom: 18px;
+            }
+            h1, h2, h3, h4{
+                    font-weight: bold;
+                    font-family: Helvetica, Arial, Verdana, sans-serif;
+            }
+            h1 {
+                    font-size: 36px;
+            }
+            h2 {
+                    font-size: 26px;
+            }
+            h3 {
+                    font-size: 20px;
+            }
+            h4 {
+                    font-size: 14px;
+            }
+            a {
+                    text-decoration: none;
+                    color: #f15a29;
+            }
+            a:hover {
+                    color: #94340e;
+            }
+            #widget {
+                    width: 290px;
+                    float: left;
+                    border: #d0d4d6 2px solid;
+            }
+            #widget #type-heading {
+                text-align:center; font-family: Helvetica, Arial, Verdana, sans-serif; font-weight:bold;
+            }
+            #widget-logo {
+                margin-bottom:20px;
+            }
+            #widget-logo p {
+                font-size:10px;
+                text-align:center;
+                font-family: Helvetica, Arial, Verdana, sans-serif;
+                margin-top:5px;
+            }
+            #widget-select {
+                margin-bottom:50px;
+            }
+            #widget .excerpt-list {
+                    margin-bottom: 10px;
+                    margin-left:5px;
+                    margin-right:5px;
+                    float: left;
+                    width:285px;
+            }
+            #widget .excerpt-list .photo {
+                    float:left;
+                    margin-right:10px;
+                    margin-bottom: 5px;
+            }
+            #widget .excerpt-list .photo .candidate-photo {
+                    width: 74px;
+            }
+            #widget .excerpt-list h5 {
+                    font-size: 14px;
+            }
+            .can-name {
+                    color: #3f3f3f;
+                    font-family: Helvetica, Arial, Verdana, sans-serif;
+                    text-transform: uppercase;
+                    font-weight:800;
+                    float: left;
+                    margin: 0 5px 0 0;
+            }
+            .date {
+                    font-size: 14px;
+                    font-family: Helvetica, Arial, Verdana, sans-serif;
+                    font-weight:lighter;
+                    float: left;
+            }
+            .excerpt-details{
+                    float: left;
+                    line-height: 16px;
+                    font-size: 11px;
+                    font-family: Helvetica, Arial, Verdana, sans-serif;
+                    text-transform: uppercase;
+            }
+            #widget .excerpt-list p {
+                    color: #242424;
+                    font-size: 13px;
+                    line-height: 18px;
+                    margin-bottom: 7px;
+                    margin-top:15px;
+            }
+            #widget .excerpt-list .excerpt-link {
+                    color: #6e6e6e;
+            }
+            #widget .excerpt-list span {
+                    float:left;
+            }
+            #widget-footer {
+                width:290px;
+                height:30px;
+                float:left;
+                color:#FFFFFF;
+                background-color:#333333;
+            }
+            #widget-footer #footer-left {
+                float:left;
+                font-size:10px;
+                margin-top: 10px;
+                margin-left:5px;
+            }
+            #widget-footer #footer-right {
+                float:right;
+                font-size:10px;
+                margin-top: 10px;
+                margin-right: 5px;
+            }
+            #widget-footer a {
+                text-decoration: none;
+                color: #f15a29;
+            }
+            #widget-footer a:hover {
+                    color: #94340e;
+            }
+            #widget-footer a:visited {
+                    color: #f15a29;
+            }
+        </style>
+        
+    </head>
+
+<body>
+<div id="widget">
+    <div id="widget-logo">
+        <a href="http://www.politicsverbatim.org" target="_blank">
+            <img src="/media/images/widget_logo.png" width="285px" border="0px"/>
+        </a>
+        <p>Track who says what in the California governor's race</p>
+    </div>
+    
+        <p id="type-heading">RECENT {{ headline_type|upper }}</p>
+        
+        <div id="widget-select" style="margin-bottom:60px;">
+            <div class="select-left" style="float:left; margin-left:10px;">
+                <form name="input" action="/widget/" method="GET">
+                    <select name="campaign" style="width:120px;" onChange="this.form.submit()">
+                        <option value="all" selected="selected">Both candidates</option>
+                        {% for campaign in campaigns %}
+                        {% ifequal campaign_slug campaign.slug %} 
+                        <option value="{{ campaign.slug }}" selected="selected">{{ campaign.name }}</option>
+                        {% else %}
+                        <option value="{{ campaign.slug }}">{{ campaign.name }}</option>
+                        {% endifequal %}
+                        {% endfor %}
+                    </select>
+            </div>
+            <div class="select-right" style="float:right; margin-right:10px;">
+                <select name="type" style="width:140px;" onChange="this.form.submit()">
+                     <option value="all" selected="selected">All types</option>
+                     {% for type in types %}
+                     {% ifequal type_slug type.slug %}
+                     <option value="{{ type.slug }}" selected="selected">{{ type.name }}</option>
+                     {% else %}
+                     <option value="{{ type.slug }}">{{ type.name }}</option>
+                     {% endifequal %}
+                     {% endfor %}
+                 </select>
+                </form>
+            </div>
+        </div>
+        
+        {% for excerpt1 in excerpts.object_list %}
+        <div class="excerpt-list">
+		<div class="photo" style="float:left;">
+		    <a href="{% url excerpt_detail object_id=excerpt1.id %}" target="_blank">
+                        <img class="candidate-photo" src="{{ excerpt1.campaign.image.url }}" border="0" />
+		    </a>
+		</div>
+                <div style="height:10px;">
+                <h5 class="can-name">{{ excerpt1.campaign }}</h5>
+                <h5 class="can-name">/</h5>
+                <span class="date">{{ excerpt1.document.source_date|date:"n/j/Y" }}</span></div>
+                <p style="margin-top:10px;">{{ excerpt1.text|truncatewords:75 }}{% if excerpt1.text|wordcount > 75 %} <a href="{% url excerpt_detail object_id=excerpt1.id %}" target="_blank">Read more</a>{% endif %}</p>
+                <span class="excerpt-details">
+                    <strong>Source:</strong> {% if excerpt1.document.url %}<a href="{{ excerpt1.document.url }}" target="_blank">{{ excerpt1.document.source }}</a>{% else %}Source unavailable{% endif %}
+                </span>
+            
+        </div>
+        {% endfor %}
+    
+    {% if excerpts.has_other_pages %}
+    <div id="more" style="float:left; width:285px; text-align:center; font-size:12px;">
+        <span class="nav-left" style="float:left; font-weight:bold; margin-left:75px; margin-bottom:10px;">{% if excerpts.has_previous %}<a href="?{{ getstr }}page={{ excerpts.previous_page_number }}">PREV</a>{% else %}PREV{% endif %}</span>
+        <span class="nav-right" style="float:right; font-weight:bold; margin-right:75px; margin-bottom:10px;">{% if excerpts.has_next %}<a href="?{{ getstr }}page={{ excerpts.next_page_number }}">NEXT</a>{% else %}NEXT{% endif %}</span>
+    </div>
+    {% endif %}
+    
+    <div id="widget-footer">
+        <span id="footer-left"><a href="http://www.politicsverbatim.org/about/" target="_blank">About us</a> | <a href="http://www.politicsverbatim.org" target="_blank">More statements</a></span>
+        <span id="footer-right">&copy; 2010 <a href="http://www.californiawatch.org" target="_blank">California Watch/CIR</span>
+    </div>
+
+</div>
+</body>
+</html>

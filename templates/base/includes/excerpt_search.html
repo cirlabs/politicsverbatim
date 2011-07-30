@@ -1,0 +1,58 @@
+	        <div class="aside-section">
+	            <div class="content-head">
+	            	<h2 class="section-name">Search their words</h2>
+	            </div>
+                        <p>Since March 2010, we have collected {{ document_count }} documents and broken them down into {{ excerpt_count }} excerpts. Search here for what matters to you:</p>
+                        <p class="search-p">Show me every ...</p>
+                        <form name="input" action="/search/" method="GET">
+                       <select name="type" style="width:175px">
+                            <option value="all" selected="selected">All types</option>
+                            {% for type in types %}
+                            {% ifequal type_slug type.slug %}
+                            <option value="{{ type.slug }}" selected="selected">{{ type.name }}</option>
+                            {% else %}
+                            <option value="{{ type.slug }}">{{ type.name }}</option>
+                            {% endifequal %}
+                            {% endfor %}
+                        </select>
+		        <p class="search-p">made by the campaign of ...</p>
+                        <select name="campaign" style="width:175px">
+                            <option value="all" selected="selected">Brown and Whitman</option>
+                            {% for campaign in campaigns %}
+                            {% ifequal campaign_slug campaign.slug %} 
+                            <option value="{{ campaign.slug }}" selected="selected">{{ campaign.name }}</option>
+                            {% else %}
+                            <option value="{{ campaign.slug }}">{{ campaign.name }}</option>
+                            {% endifequal %}
+                            {% endfor %}
+                        </select>
+                        <p class="search-p">about the subject of ... </p>
+                        <select name="topic" style="width:175px">
+                            <option value="all" selected="selected">All topics</option>
+                            {% for category in categories %}
+                            {% ifequal topic_slug category.slug %}
+                            <option value="{{ category.slug }}" selected="selected">{{ category.name }}</option>
+                            {% else %}
+                            <option value="{{ category.slug }}">{{ category.name }}</option>
+                            {% endifequal %}
+                            {% endfor %}
+                        </select>
+                        <br />
+                        <p class="search-p">in the city of ... </p>
+                        <select name="place" style="width:175px">
+                            <option value="all" selected="selected">All locations</option>
+                            {% for location in locations %}
+                            {% ifequal location_slug location.slug %}
+                            <option value="{{ location.slug }}" selected="selected">{{ location.city }}, {{ location.state }}</option>
+                            {% else %}
+                            <option value="{{ location.slug }}">{{ location.city }}, {{ location.state }}</option>
+                            {% endifequal %}
+                            {% endfor %}
+                        </select>
+                        <br />
+                        <p class="search-p">containing the words ... </p>
+                        <input name="q" type="text" size="23" />
+                        <br /><br />
+                        <input type="submit" value="Search">
+                        </form>
+                </div> <!-- end aside-section -->

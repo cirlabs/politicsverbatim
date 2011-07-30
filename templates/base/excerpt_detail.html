@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Politics Verbatim | Excerpt detail{% endblock %}
+{% block extrahead %}
+    <meta property="og:title" content="Statement by {{ object.campaign }} about {% for tag in object.category.all %}{{ tag|lower }}{% if not forloop.last %}, {% endif %}{% endfor %}" />
+    <meta property="og:type" content="article" />
+    <meta property="og:description" content="{{ object.text }}" />
+    {% if object.campaign.image %}<meta property="og:image" content="{{ object.campaign.image.url }}" />{% endif %}
+{% endblock %}
+{% block content %}
+<div id="content-container">
+    <div id="content">
+
+ 	    <div class="content-head">
+                <h2>Excerpt detail</h2>
+	    </div>
+            {% with object as excerpt %}
+	    <div class="excerpt-list">
+		<div class="excerpt-left">
+                    <div class="photo">
+			<a href="{{ excerpt.document.url }}">
+			    {% if excerpt.campaign.image %}<img class="candidate-photo" src="{{ excerpt.campaign.image.url }}" border="0" />{% endif %}
+			    {% if excerpt.document.source.image %}<img class="source-icon" src="{{ excerpt.document.source.image.url }}" border="0" />{% endif %}
+			</a>
+                    </div>
+                </div>
+		<div class="excerpt-right">
+                    <h5 class="can-name">{{ excerpt.campaign }}</h5>
+
+		    <h5 class="can-name">/</h5>
+		    <span class="date">{{ excerpt.document.source_date|date:"N j, Y" }}</span>
+		    <span class="like" style="float:right;">
+			<fb:share-button href="{{ excerpt.get_facebook_url }}" type="button"></fb:share-button>
+			<div class="topsy_widget_data" style="margin-left:80px; margin-top:1px;"><script type="text/javascript">topsyWidgetPreload({ "url": "{{ excerpt.get_facebook_url }}", "title": "{{ excerpt.text|truncatewords:15 }}", "theme": "jade", "nick": "politicsv" });</script></div>
+		    </span>
+		    <p>{{ excerpt.text }}</p>
+		    <span class="excerpt-details">
+                        <strong>Source:</strong> {% if excerpt.document.url %}<a href="{{ excerpt.document.url }}" target="_blank">{{ excerpt.document.source }}</a>{% endif %}
+                        <br />
+			<strong>Tags:</strong>
+                        {% for tag in excerpt.category.all %}
+			<a href="{% url topic_detail slug=tag.slug %}">{{ tag.name }}</a>{% if not forloop.last %},{% else %}{% if excerpt.type.all and excerpt.category.all %},{% endif %}{% endif %}
+                        {% endfor %}
+                        {% for tag in excerpt.type.all %}
+			<a href="{% url type_detail slug=tag.slug %}">{{ tag.name }}</a>{% if not forloop.last %},{% endif %}
+                        {% endfor %}
+		    </span>
+		</div>
+	    </div><!-- end excerpt-list -->
+            {% endwith %}
+
+    </div><!-- end content -->
+    
+    <div id="aside">
+        
+        {% include "base/includes/excerpt_search.html" %}
+
+    </div><!-- end aside -->
+    
+</div>
+
+{% endblock %}

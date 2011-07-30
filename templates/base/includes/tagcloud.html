@@ -1,0 +1,52 @@
+<style type="text/css">
+.tag-cloud {
+    font-family: Helvetica, Arial, Verdana, sans-serif;
+    text-align: center;    
+    border: 1px solid #d34d31;
+    padding: 5px;
+    background-color: #d34d31;
+    width:300px;
+    color: white;
+    
+}
+
+
+.tag-1 {
+    font-size: 12px;
+}
+
+.tag-2 {
+    font-size: 15px;
+}
+
+.tag-3 {
+    font-size: 18px;
+}
+
+.tag-4 {
+    font-size: 21px;
+}
+
+.tag-5 {
+    font-size: 24px;
+}
+
+.tag-6 {
+    font-size: 27px;
+}
+
+/* For large tag cloud 6 step */
+.tag-7 {
+    font-size: 30px;
+}
+
+.tag-8 {
+    font-size: 34px;
+}
+</style>
+
+<div class="tag-cloud">
+{% for tag in tags %}
+<span class="tag-{{ tag.count }}">{{ tag.tag }}</span> 
+{% endfor %}
+</div><!-- tag-cloud end -->

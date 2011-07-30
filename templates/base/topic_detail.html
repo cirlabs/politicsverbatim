@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+{% block title %}Politics Verbatim | {{ topic.name }}{% endblock %}
+{% block extrahead %}
+<meta http-equiv="X-UA-Compatible" content="IE=7" />
+<link rel="alternate" type="application/rss+xml" title="Politics Verbatim | {{ topic.name }}" href="{% url topic_detail slug=topic.slug %}feed/" />
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+
+<script src="http://api.simile-widgets.org/timeplot/1.1/timeplot-api.js" type="text/javascript"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+    $("#tabs").tabs();
+  });
+</script>
+
+<!--[if !IE]><!-->
+<script type="text/javascript">
+var timeplot;
+
+function onLoad(topic, campaign) {
+  var eventSource = new Timeplot.DefaultEventSource();
+  var plotInfo = [
+    Timeplot.createPlotInfo({
+      id: "plot1",
+      dataSource: new Timeplot.ColumnSource(eventSource,1),
+      valueGeometry: new Timeplot.DefaultValueGeometry({
+        gridColor: "#000000",
+        axisLabelsPlacement: "left",
+	gridType: "short",
+        min: 0,
+	max: 10,
+      }),
+      timeGeometry: new Timeplot.DefaultTimeGeometry({
+        gridColor: new Timeplot.Color("#000000"),
+        axisLabelsPlacement: "top"
+      }),      
+      lineColor: "#ff0000",
+      fillColor: "#cc8080",
+      showValues: true
+    })
+  ];
+
+  
+  timeplot = Timeplot.create(document.getElementById("my-timeplot"), plotInfo);
+  timeplot.loadText("/csv/?topic=" + topic + "&campaign=" + campaign, ",", eventSource);
+}
+
+var resizeTimerID = null;
+function onResize() {
+    if (resizeTimerID == null) {
+	resizeTimerID = window.setTimeout(function() {
+	    resizeTimerID = null;
+	    if (timeplot) timeplot.repaint();
+	}, 0);
+    }
+}
+
+</script>
+<![endif]-->
+
+{% endblock %}
+
+{% if campaign_topics %}
+{% block bodytag %}<body onload="onLoad('{{ topic.slug }}', '{{ initial.campaign.slug }}');" onresize="onResize()">{% endblock %}
+{% endif %}
+
+{% block content %}
+<div id="content-container">
+    {% if campaign_topics %}
+    <div id="content">
+	<div id="tabs" style="width:575px; border:none;">
+
+	<div class="content-head">
+            <h2>{{ topic.name }}</h2>
+	</div>
+	    
+	    <ul style="margin-bottom:20px;">
+		{% for t in campaign_topics %}
+		<li class="tab-li"><a href="#fragment-{{ forloop.counter }}" onclick="onLoad('{{ topic.slug }}', '{{ t.campaign.slug }}');"><span>{{ t.campaign }}</span></a></li>
+		{% endfor %}
+	    </ul>
+	
+	{% for topic in campaign_topics %}
+	<div id="fragment-{{ forloop.counter }}" style="margin-left:0px; padding-left:0px;">
+	
+	<div id="position-box">
+	    <div id="position-image"><img src="{{ topic.campaign.topic_image.url }}" width="150px" /></div>
+	    {{ topic.position|safe }}
+	</div>
+	
+	<div class="content-head">
+	    <h2>Key statements</h2>
+	</div>
+	
+            {% for excerpt in topic.supporting_excerpts.all %}
+	    <div class="excerpt-list">
+		<div class="excerpt-left">
+		    <div class="photo">
+			<a href="{% url excerpt_detail object_id=excerpt.id %}">
+			<img class="candidate-photo" src="{{ excerpt.campaign.image.url }}" border="0" />
+			{% if excerpt.document.source.image %}<img class="source-icon" src="{{ excerpt.document.source.image.url }}" border="0"/>{% endif %}
+			</a>
+		    </div>
+		</div>
+		<div class="excerpt-right">
+    
+			<h5 class="can-name">{{ excerpt.campaign }}</h5>
+			<h5 class="can-name">/</h5>
+			<span class="date">{{ excerpt.document.source_date|date:"N j, Y" }}</span>
+			<span class="like" style="float:right;">
+			    <fb:share-button href="{{ excerpt.get_facebook_url }}" type="button"></fb:share-button>
+			    <div class="topsy_widget_data" style="margin-left:80px; margin-top:1px;"><script type="text/javascript">topsyWidgetPreload({ "url": "{{ excerpt.get_facebook_url }}", "title": "{{ excerpt.text|truncatewords:15 }}", "theme": "jade", "nick": "politicsv" });</script></div>
+			</span>
+		    <p>{{ excerpt.text }}</p>
+		    <span class="excerpt-details">
+                        <strong>Source:</strong> {% if excerpt.document.url %}<a href="{{ excerpt.document.url }}" target="_blank">{{ excerpt.document.source }}</a>{% endif %}
+                        <br />
+			<strong>Tags:</strong>
+                        {% for tag in excerpt.category.all %}
+			<a href="{% url topic_detail slug=tag.slug %}">{{ tag.name }}</a>{% if not forloop.last %},{% else %}{% if excerpt.type.all and excerpt.category.all %},{% endif %}{% endif %}
+                        {% endfor %}
+                        {% for tag in excerpt.type.all %}
+			<a href="{% url type_detail slug=tag.slug %}">{{ tag.name }}</a>{% if not forloop.last %},{% endif %}
+                        {% endfor %}
+		    </span>
+		</div>
+	    </div><!-- end excerpt-list -->
+            {% endfor %}
+	</div>
+	{% endfor %}
+
+	</div><!-- end tabs -->
+    </div><!-- end content -->
+    
+    {% else %}<!-- conditional if campaign topic information exists -->
+    
+    <div id="content">
+      <div class="content-head">
+                <h2>{{ topic.name }} {{all_excerpts}}</h2>
+      </div>
+      
+    {% for excerpt in excerpts.object_list %}
+    <div class="excerpt-list">
+    <div class="excerpt-left">
+        <div class="photo">
+      <a href="{% url excerpt_detail object_id=excerpt.id %}">
+      <img class="candidate-photo" src="{{ excerpt.campaign.image.url }}" border="0" />
+      {% if excerpt.document.source.image %}<img class="source-icon" src="{{ excerpt.document.source.image.url }}" border="0"/>{% endif %}
+      </a>
+        </div>
+    </div>
+    <div class="excerpt-right">
+    
+      <h5 class="can-name">{{ excerpt.campaign }}</h5>
+      <h5 class="can-name">/</h5>
+      <span class="date">{{ excerpt.document.source_date|date:"N j, Y" }}</span>
+      <span class="like" style="float:right;">
+          <fb:share-button href="{{ excerpt.get_facebook_url }}" type="button"></fb:share-button>
+          <div class="topsy_widget_data" style="margin-left:80px; margin-top:1px;"><script type="text/javascript">topsyWidgetPreload({ "url": "{{ excerpt.get_facebook_url }}", "title": "{{ excerpt.text|truncatewords:15 }}", "theme": "jade", "nick": "politicsv" });</script></div>
+      </span>
+        <p>{{ excerpt.text }}</p>
+        <span class="excerpt-details">
+                        <strong>Source:</strong> {% if excerpt.document.url %}<a href="{{ excerpt.document.url }}" target="_blank">{{ excerpt.document.source }}</a>{% endif %}
+                        <br />
+      <strong>Tags:</strong>
+                        {% for tag in excerpt.category.all %}
+      <a href="{% url topic_detail slug=tag.slug %}">{{ tag.name }}</a>{% if not forloop.last %},{% else %}{% if excerpt.type.all and excerpt.category.all %},{% endif %}{% endif %}
+                        {% endfor %}
+                        {% for tag in excerpt.type.all %}
+      <a href="{% url type_detail slug=tag.slug %}">{{ tag.name }}</a>{% if not forloop.last %},{% endif %}
+                        {% endfor %}
+        </span>
+    </div>
+      </div><!-- end excerpt-list -->
+            {% endfor %}
+
+            <br />
+            {% if excerpts.has_other_pages %}
+            <div class="pagination">
+                <span class="step-links">
+                    <div class="page-box" id="prev-btn">
+                    {% if excerpts.has_previous %}
+            <a href="?page={{ excerpts.previous_page_number }}">prev</a>
+                    {% endif %}
+        </div>
+
+                    <div class="page-box" id="current">
+                        <h5>Page {{ excerpts.number }} of {{ excerpts.paginator.num_pages }}</h5>
+                    </div>
+                    
+                    <div class="page-box" id="next-btn">
+                    {% if excerpts.has_next %}
+                        <a href="?page={{ excerpts.next_page_number }}">next</a>
+                    {% endif %}
+                    </div>
+
+               </span>
+            </div><!-- end pagination -->
+            {% endif %}
+
+    </div><!-- end content -->
+    {% endif %}
+    
+    <div id="aside">
+	
+        {% if campaign_topics %}
+	
+        <!--[if !IE]><!-->
+	<div class="aside-section">
+	    <div class="content-head">
+	        <h2 class="section-name">Topic Timeline</h2>
+	    </div>
+	    <p>The timeline shows how many excerpts we've logged from the selected candidate and topic by day throughout the campaign.</p>
+	    <p>Use it to track whether and when issues peaked in importance on the campaign trail.</p>
+	    <div id="my-timeplot" style="width: 300px; height: 200px;"></div>
+        </div>
+	<![endif]-->
+	{% endif %}
+
+        <div class="aside-section" style="margin-bottom:0px;">
+	    <div class="content-head">
+	        <h2 class="section-name">See a problem?</h2>
+	    </div>
+            <p>If our issue summaries or excerpt collections are missing something important, or if you believe we have
+	    improperly characterized a candidate's position, feel free to <a href="/contact/">get in touch</a>!</p>
+        </div>
+
+        {% include "base/includes/excerpt_search.html" %}
+	
+	{% if not campaign_topics %}
+        <div class="aside-section">
+	    <div class="content-head">
+	        <h2 class="section-name">Buzzwords</h2>
+	    </div>
+            <div id="cloud-rail">{{ cloud }}</div>
+        </div>
+	{% endif %}
+        
+    </div><!-- end aside -->
+    
+</div>
+
+{% endblock %}
