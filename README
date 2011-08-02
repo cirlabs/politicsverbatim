@@ -1,11 +1,22 @@
-A very quickly thrown-together repo for Politics Verbatim, based on Django 1.2. Update and cleanup to come, but feel free to pick through it of anything you might find useful!
+Politics Verbatim
+
+Politics Verbatim was a project of the Center for Investigative Reporting and California Watch
+to track the attacks, claims, promises and other statements by California's two major-party
+candidates in the 2010 gubernatorial election. You can see it in action at www.politicsverbatim.org.
+
+Though it was built very quickly (and not especially cleanly), the PV platform can easily be adapted
+to other situations, including elections, legislative debates, tracking pundits, and basically any
+situation in which the goal is to track and chronicle what people are saying.
+
+For now, we're making the platform available (minus any cleanup) for anyone who wants it. We'll clean it up
+if there's demand for it. Otherwise, feel free to pick through it. You might find something useful!
 
 Please direct questions to Chase Davis at cdavis@cironline.org
 
-External dependencies:
+Politics Verbatim was built on Django 1.2 and required the following external dependencies:
 - Haystack
 - South
 - django-tinymce
 - geopy (easy_install geopy)
 - twitter (http://code.google.com/p/python-twitter/)
-- python-bitly: svn checkout http://python-bitly.googlecode.com/svn/trunk/ python-bitly-read-only
+- python-bitly: (svn checkout http://python-bitly.googlecode.com/svn/trunk/ python-bitly-read-only)
