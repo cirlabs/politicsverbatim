@@ -6,6 +6,9 @@ register = template.Library()
 
 @register.tag
 def events_per_month(parser, token):
+    """
+    Gets event count for a month, given a date object.
+    """
     bits = token.contents.split()
     if len(bits) != 2:
         raise template.TemplateSyntaxError(u'%s requires a date object')

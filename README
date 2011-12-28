@@ -13,7 +13,7 @@ if there's demand for it. Otherwise, feel free to pick through it. You might fin
 
 Please direct questions to Chase Davis at cdavis@cironline.org
 
-Politics Verbatim was built on Django 1.2 and required the following external dependencies:
+Politics Verbatim was built on Django 1.2 and requires the following external dependencies:
 - Haystack
 - South
 - django-tinymce

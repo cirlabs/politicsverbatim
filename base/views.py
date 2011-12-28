@@ -11,12 +11,14 @@ from django.template import RequestContext
 from django.db.models import Q, Count
 from django.http import HttpResponse
 
-
 def homepage(request):
+    """
+    Front page view.
+    """
     # Main section
     posts = Post.published_objects.all()[:4]
-    featured_post = posts[0]
-    excerpts = Excerpt.objects.filter(document__status='F').order_by('-document__source_date', '-date_entered')[:10]
+    excerpts = Excerpt.published_objects.all().order_by('-document__source_date',
+                                                        '-date_entered')[:10]
     
     # Right rail
     tweets = Tweet.objects.all().order_by('-created_at')[:15]
@@ -27,12 +29,14 @@ def homepage(request):
     return render_to_response('homepage.html', {
         'excerpts': excerpts,
         'events': events,
+        'featured_post': posts[0],
         'posts': posts[1:4],
-        'featured_post': featured_post,
         'tweets': tweets}, context_instance=RequestContext(request))
 
-
 def candidate_detail(request, slug):
+    """
+    Candidate detail pages.
+    """
     candidate = get_object_or_404(Campaign, slug=slug)
     today = date.today()
     
@@ -52,11 +56,7 @@ def candidate_detail(request, slug):
         excerpts = paginator.page(paginator.num_pages)
     
     # Get most recent tweets
-    tweets = []
-    for twitteruser in candidate.twitteruser_set.all():
-        for tweet in twitteruser.tweet_set.all():
-            tweets.append(tweet)
-    tweets.sort(key=lambda x: x.created_at, reverse=True)
+    tweets = Tweet.objects.all().order_by('-created_at')
 
     # Create and render word cloud
     cloudinput = ''
@@ -72,16 +72,20 @@ def candidate_detail(request, slug):
         'excerpts': excerpts,
         'events': events}, context_instance=RequestContext(request))
 
-
 def topic_list(request):
+    """
+    Topics page list.
+    """
     object_list = list(set([c.topic for c in CampaignTopic.objects.all()]))
     object_list.sort(key=lambda x: x.name.lower())
 
     return render_to_response('base/topic_list.html', {
         'object_list': object_list}, context_instance=RequestContext(request))
     
-
 def topic_detail(request, slug):
+    """
+    Topics page detail.
+    """
     topic = Category.objects.get(slug=slug)
 
     # Will return a CampaignTopic if it exists. Otherwise will return just a paginated list
@@ -94,7 +98,7 @@ def topic_detail(request, slug):
             'initial': campaign_topics[0],
             'topic': topic}, context_instance=RequestContext(request))
     else:
-        all_excerpts = Excerpt.objects.filter(category__slug=topic.slug, document__status='F')
+        all_excerpts = Excerpt.published_objects.filter(category__slug=topic.slug)
         
         # Get paginated excerpts
         paginator = Paginator(all_excerpts, 15)
@@ -110,12 +114,14 @@ def topic_detail(request, slug):
         return render_to_response('base/topic_detail.html', {
             'topic': topic,
             'excerpts': excerpts}, context_instance=RequestContext(request))
-
-        
+   
 def type_detail(request, slug):
+    """
+    Excerpt type list.
+    """
     doctype = ExcerptType.objects.get(slug=slug)
     all_excerpts = get_list_or_404(Excerpt, type__slug=doctype.slug)
-    all_excerpts.sort(key=lambda x: x.document.source_date, reverse=True) # Needs lambda sort because it's a list, not queryset
+    all_excerpts.sort(key=lambda x: x.document.source_date, reverse=True)
     candidates = Campaign.objects.all()
     
     # Get paginated excerpts
@@ -141,9 +147,11 @@ def type_detail(request, slug):
         'cloud': cloud,
         'excerpts': excerpts}, context_instance=RequestContext(request))
 
-
 def search(request):
-    excerpts = Excerpt.objects.filter(document__status='F').order_by('-document__source_date')
+    """
+    Search view.
+    """
+    excerpts = Excerpt.published_objects.all().order_by('-document__source_date')
     if request.GET:
         if request.GET.has_key('q'):
             qs = request.GET['q']
@@ -177,11 +185,10 @@ def search(request):
                 location = Location.objects.get(slug=request.GET['place'])
                 location_slug = location.slug
                 excerpts = excerpts.filter(document__location=location)
-                #excerpts = excerpts.filter(Q(document__location__slug=place) | Q(document__source__location__slug=place))
     
         getstr = 'type=%s&campaign=%s&topic=%s&place=%s' % (type_slug, campaign_slug, topic_slug, location_slug)
     
-    # Return no-results page and save on computation
+    # Return no-results page
     if len(excerpts) == 0:
         return render_to_response('base/search_results.html', {
             'type': type,
@@ -221,8 +228,10 @@ def search(request):
         'location_slug': location_slug,
         'cloud': cloud}, context_instance=RequestContext(request))
 
-
 def timeline_csv(request):
+    """
+    View to generate CSV for right rail charts.
+    """
     if request.GET.has_key('topic'):
         topic = Category.objects.get(slug=request.GET['topic'])
     else:
@@ -252,12 +261,14 @@ def timeline_csv(request):
     
     return response
 
-
 def widget(request):
-    excerpts = Excerpt.objects.filter(document__status='F').order_by('-document__source_date')
+    """
+    View to create embeddable widget.
+    """
+    excerpts = Excerpt.published_objects.order_by('-document__source_date')
     
     headline_type = 'Statements'
-    # Phase out this hard-coding for database solution
+    # Todo: Phase out this hard-coding for database solution
     pluralize_dict = {
         'all': 'Statements',
         'attack': 'Candidate attacks',
@@ -319,4 +330,3 @@ def widget(request):
             'type': type,
             'campaign_slug': campaign_slug,
             'type_slug': type_slug}, context_instance=RequestContext(request))
-            

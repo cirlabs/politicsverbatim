@@ -1,5 +1,6 @@
 from django.contrib import admin
-from blog.models import *
+from django.conf import settings
+from blog.models import Post
 from utils.tinymce.widgets import TinyMCE
 
 class PostAdmin(admin.ModelAdmin):
@@ -21,7 +22,5 @@ class PostAdmin(admin.ModelAdmin):
     list_display = ('headline', 'publication_date', 'publication_status', 'created_date', 'updated_date')
 
     class Media:
-        js = ['/media/js/tinymce/jscripts/tiny_mce/tiny_mce.js']
-
-    
+        js = [settings.MEDIA_URL + 'js/tinymce/jscripts/tiny_mce/tiny_mce.js']
 admin.site.register(Post, PostAdmin)

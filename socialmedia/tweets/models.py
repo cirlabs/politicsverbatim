@@ -4,7 +4,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from socialmedia.tweets.constants import TWITTER_USER_TYPES
 from base.models import Campaign
 
-
 class TwitterUser(models.Model):
     candidate = models.ForeignKey(Campaign)
     screen_name = models.CharField(max_length=100)
@@ -16,14 +15,13 @@ class TwitterUser(models.Model):
     followers_count = models.IntegerField(blank=True, null=True)
     friends_count = models.IntegerField(blank=True, null=True)
     statuses_count = models.IntegerField(blank=True, null=True)
-    image = models.ImageField(upload_to='ontherecord/images/twitter/', blank=True, help_text='Twitter account image')
+    image = models.ImageField(upload_to='images/twitter/', blank=True, help_text='Twitter account image')
     
     class Meta:
         ordering = ['screen_name']
     
     def __unicode__(self):
         return '%s | %s' % (self.screen_name, self.type)
-
 
 class Tweet(models.Model):
     tweet_id = models.CharField(max_length=20)

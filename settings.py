@@ -40,7 +40,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
 )
 
-
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -117,7 +116,6 @@ TEMPLATE_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(PROJECT_PATH, "templates"),
 )
-
 
 INSTALLED_APPS = (
     'django.contrib.auth',

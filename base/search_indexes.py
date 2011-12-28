@@ -6,6 +6,6 @@ class ExcerptIndex(indexes.RealTimeSearchIndex):
     text = indexes.CharField(document=True, use_template=True)
 
     def get_queryset(self):
-        return Excerpt.objects.filter(document__status='F')
+        return Excerpt.published_objects.all()
 
 site.register(Excerpt, ExcerptIndex)

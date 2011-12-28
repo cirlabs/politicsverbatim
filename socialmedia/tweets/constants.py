@@ -3,4 +3,3 @@ TWITTER_USER_TYPES = (
     ('staff', 'Staff'),
     ('group', 'Support Group/IE'),
 )
-

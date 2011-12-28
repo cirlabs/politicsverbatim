@@ -3,14 +3,17 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.sites.managers import CurrentSiteManager
 from django.conf import settings
-from base.models import Campaign, Document
+from base.models import Campaign
 
 class Type(models.Model):
     """
     The type of event being entered: A fund-raiser, speech, etc.
     """
-    name = models.CharField(max_length=100, help_text='The type of event you are entering. Ex. Fund-raiser, speech, etc.')
-    slug = models.SlugField(max_length=255, unique=True, help_text=(u"Built automatically. Do not change unless you know what you're doing."))
+    name = models.CharField(max_length=100,
+                            help_text='The type of event you are entering. Ex. Fund-raiser, speech, etc.')
+    slug = models.SlugField(max_length=255,
+                            unique=True,
+                            help_text=(u"Built automatically. Do not change unless you know what you're doing."))
     
     class Meta:
         ordering = ['name']
@@ -18,13 +21,17 @@ class Type(models.Model):
     def __unicode__(self):
         return self.name
 
-
 class UpcomingEventsManager(models.Manager):
+    """
+    Manager to return only upcoming events.
+    """
     def get_query_set(self):
         return super(UpcomingEventsManager, self).get_query_set().filter(event_datetime__gte=datetime.datetime.now()).order_by('-event_datetime')
 
-
 class Event(models.Model):
+    """
+    An event like a campaign appearance or speech. Appears in the upcoming event tracker.
+    """
     title = models.CharField(max_length=100)
     slug = models.SlugField(max_length=255, unique=True, help_text=(u"Built automatically. Do not change unless you know what you're doing."))
     description = models.TextField(blank=True)
@@ -40,7 +47,6 @@ class Event(models.Model):
     candidate = models.ForeignKey(Campaign)
     covered = models.BooleanField()
     assigned_to = models.CharField(max_length=255, blank=True)
-    
     # Managers
     objects = models.Manager()
     upcoming_events = UpcomingEventsManager()

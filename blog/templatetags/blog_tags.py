@@ -6,6 +6,9 @@ register = template.Library()
 
 @register.tag
 def truncatewords_html_readmore(parser, token):
+    """
+    Adds a "read more" link at the end of a truncated post. Used for front page.
+    """
     bits = token.contents.split()
     if len(bits) < 4:
         raise template.TemplateSyntaxError(u'%s requires 4 arguments')
@@ -25,9 +28,11 @@ class TruncateNode(template.Node):
         end_text = '... <a href="%s">Read more</a>' % post.get_absolute_url()
         return truncate_html_words(value, self.length, end_text)
 
-
 @register.tag
 def posts_per_month(parser, token):
+    """
+    Calculates the number of posts published in a given month, given a date.
+    """
     bits = token.contents.split()
     if len(bits) != 2:
         raise template.TemplateSyntaxError(u'%s requires a date object')

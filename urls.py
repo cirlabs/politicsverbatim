@@ -9,7 +9,8 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Base URLs
     url(r'^$', 'base.views.homepage', name='homepage'),
-    (r'^robots.txt$', 'django.views.generic.simple.direct_to_template', {'template':'robots.txt', 'mimetype':'text/plain'}),
+    (r'^robots.txt$', 'django.views.generic.simple.direct_to_template',
+     {'template':'robots.txt', 'mimetype':'text/plain'}),
     (r'^widget/$', 'base.views.widget'),
                        
     # Admin URLs
@@ -32,32 +33,37 @@ urlpatterns = patterns('',
     url(r'^event/(?P<id>\d+)/$', 'events.views.event_detail', name='event_detail'),
     url(r'^events/$', 'events.views.event_list', name='event_list'),
     url(r'^events/(?P<year>\d{4})/$', 'events.views.event_year', name='event_year'),
-    url(r'^events/(?P<year>\d{4})/(?P<month>\d{2})/$', 'events.views.event_month', name='event_month'),
-    url(r'^events/(?P<year>\d{4})/(?P<month>\d{2})/(?P<day>\d{2})/$', 'events.views.event_day', name='event_day'),
+    url(r'^events/(?P<year>\d{4})/(?P<month>\d{2})/$',
+        'events.views.event_month', name='event_month'),
+    url(r'^events/(?P<year>\d{4})/(?P<month>\d{2})/(?P<day>\d{2})/$',
+        'events.views.event_day', name='event_day'),
     
     # Blog URLs (generics)
     url(r'^blog/$', 'django.views.generic.list_detail.object_list', {
         'queryset': Post.published_objects.all(),
         'paginate_by': 10,
         'template_name': 'blog/blog_home.html',
-        'extra_context': {'dates': Post.published_objects.all().dates('publication_date', 'month'), 'count': Post.published_objects.all().count()}},
+        'extra_context': {'dates': Post.published_objects.all().dates('publication_date', 'month'),
+                          'count': Post.published_objects.all().count()}},
         name='blog_home'),
     url(r'^blog/(?P<year>\d{4})/(?P<month>.+)/$', 'django.views.generic.date_based.archive_month', {
         'queryset': Post.published_objects.all(),
         'date_field': 'publication_date',
         'template_name': 'blog/blog_home.html',
-        'extra_context': {'dates': Post.published_objects.all().dates('publication_date', 'month'), 'count': Post.published_objects.all().count()}},
+        'extra_context': {'dates': Post.published_objects.all().dates('publication_date', 'month'),
+                          'count': Post.published_objects.all().count()}},
         name='blog_month'),
     url(r'^blog/(?P<slug>.+)/$', 'django.views.generic.list_detail.object_detail', {
         'queryset': Post.objects.all(),
         'template_name': 'blog/blog_detail.html',
-        'extra_context': {'dates': Post.published_objects.all().dates('publication_date', 'month'), 'count': Post.published_objects.all().count()}},
+        'extra_context': {'dates': Post.published_objects.all().dates('publication_date', 'month'),
+                          'count': Post.published_objects.all().count()}},
         name='blog_detail'),
         
     # Topic URLs
     url(r'^topics/(?P<slug>.+)/feed/$', ExcerptCategoryFeed(), name='topic_feed'),
     url(r'^topics/(?P<slug>.+)/$', 'base.views.topic_detail', name='topic_detail'),
-    url(r'^topics/$', 'base.views.topic_list', name='topic_detail'),
+    url(r'^topics/$', 'base.views.topic_list', name='topic_list'),
 
     # Type URLs
     url(r'^type/(?P<slug>.+)/feed/$', ExcerptTypeFeed(), name='type_feed'),
@@ -76,5 +82,4 @@ urlpatterns = patterns('',
     
     # Misc URLs
     url(r'^csv/', 'base.views.timeline_csv', name='csv'),  
-
 )

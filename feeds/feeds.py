@@ -1,34 +1,34 @@
 from django.contrib.syndication.views import Feed
 from django.contrib.syndication.views import FeedDoesNotExist
 from django.shortcuts import get_object_or_404
-from base.models import *
-from events.models import *
+from django.core.urlresolvers import reverse
+from base.models import Excerpt, Topic, Type
+from events.models import Event
 from blog.models import Post
 
 class LatestExcerptsFeed(Feed):
     title = "Politics Verbatim | Latest excerpts"
-    link = "/"
+    link = reverse('homepage')
     description = "Latest excerpts added to politicsverbatim.org."
 
     def items(self):
-        return Excerpt.objects.filter(document__status='F').order_by('-date_entered')[:25]
+        return Excerpt.published_objects.all().order_by('-date_entered')[:25]
 
     def item_title(self, item):
-        return str(item.campaign) + ' on ' + ', '.join([c.name.lower() for c in item.category.all()])
+        return '%s on %s' (str(item.campaign), ', '.join([c.name.lower() for c in item.category.all()]))
 
     def item_description(self, item):
         return item.text
     
     def item_link(self, item):
-        return 'http://www.politicsverbatim.org/excerpt/%s/' % str(item.id)
+        return reverse('excerpt_detail', args=[str(item.id)])
     
     def item_pubdate(self,item):
         return item.date_entered
 
-
 class LatestEventsFeed(Feed):
     title = "Politics Verbatim | Latest events"
-    link = "/events/"
+    link = reverse('event_list')
     description = "Latest events added to politicsverbatim.org."
 
     def items(self):
@@ -41,15 +41,14 @@ class LatestEventsFeed(Feed):
         return item.description
     
     def item_link(self, item):
-        return 'http://www.politicsverbatim.org/event/%s/' % str(item.id)
+        return reverse('event_detail', args=[str(item.id)])
     
     def item_pubdate(self,item):
         return item.created_date
 
-
 class LatestPostsFeed(Feed):
     title = "Politics Verbatim | On Message blog"
-    link = "/blog/"
+    link = reverse('blog_home')
     description = "Latest blog posts added to On Message."
 
     def items(self):
@@ -62,11 +61,10 @@ class LatestPostsFeed(Feed):
         return item.body
     
     def item_link(self, item):
-        return 'http://www.politicsverbatim.org/excerpt/%s/' % str(item.slug)
+        return reverse('blog_detail', str(item.slug))
     
     def item_pubdate(self,item):
         return item.publication_date
-
 
 class CandidateFeed(Feed):
     def get_object(self, request, slug):
@@ -76,26 +74,25 @@ class CandidateFeed(Feed):
         return "Politics Verbatim | %s " % obj.name
     
     def link(self, obj):
-        return 'http://www.politicsverbatim.org/candidates/%s/' % obj.slug
+        return reverse('candidate_detail', obj.slug)
     
     def description(self, obj):
         return "Latest excerpts added to politicsverbatim.org about %s." % obj.name
 
     def items(self, obj):
-        return Excerpt.objects.filter(document__status='F', campaign=obj).order_by('-date_entered')[:25]
+        return Excerpt.published_objects.filter(campaign=obj).order_by('-date_entered')[:25]
 
     def item_title(self, item):
-        return str(item.campaign) + ' on ' + ', '.join([c.name.lower() for c in item.category.all()])
+        return '%s on %s' % (str(item.campaign), ', '.join([c.name.lower() for c in item.category.all()]))
 
     def item_description(self, item):
         return item.text
     
     def item_link(self, item):
-        return 'http://www.politicsverbatim.org/excerpt/%s/' % str(item.id)
+        return reverse('excerpt_detail', args=[str(item.id)])
 
     def item_pubdate(self,item):
         return item.date_entered
-
 
 class ExcerptCategoryFeed(Feed):
     def get_object(self, request, slug):
@@ -105,26 +102,25 @@ class ExcerptCategoryFeed(Feed):
         return "Politics Verbatim | %s " % obj.name
     
     def link(self, obj):
-        return 'http://www.politicsverbatim.org/topics/%s/' % obj.slug
+        return reverse('topic_detail', obj.slug)
     
     def description(self, obj):
         return "Latest excerpts added to politicsverbatim.org about %s." % obj.name.lower()
 
     def items(self, obj):
-        return Excerpt.objects.filter(document__status='F', category=obj).order_by('-date_entered')[:25]
+        return Excerpt.published_objects.filter(category=obj).order_by('-date_entered')[:25]
 
     def item_title(self, item):
-        return str(item.campaign) + ' on ' + ', '.join([c.name.lower() for c in item.category.all()])
+        return '%s on %s' % (str(item.campaign), ', '.join([c.name.lower() for c in item.category.all()]))
 
     def item_description(self, item):
         return item.text
     
     def item_link(self, item):
-        return 'http://www.politicsverbatim.org/excerpt/%s/' % str(item.id)
+        return reverse('excerpt_detail', args=[str(item.id)])
 
     def item_pubdate(self,item):
         return item.date_entered
-
 
 class ExcerptTypeFeed(Feed):
     def get_object(self, request, slug):
@@ -134,23 +130,22 @@ class ExcerptTypeFeed(Feed):
         return "Politics Verbatim | %s " % obj.name
     
     def link(self, obj):
-        return 'http://www.politicsverbatim.org/type/%s/' % obj.slug
+        return reverse('type_detail', obj.slug)
     
     def description(self, obj):
         return "Latest excerpts added to politicsverbatim.org about %s." % obj.name.lower()
 
     def items(self, obj):
-        return Excerpt.objects.filter(document__status='F', type=obj).order_by('-date_entered')[:25]
+        return Excerpt.published_objects.filter(type=obj).order_by('-date_entered')[:25]
 
     def item_title(self, item):
-        return str(item.campaign) + ' on ' + ', '.join([c.name.lower() for c in item.category.all()])
+        return '%s on %s' % (str(item.campaign), ', '.join([c.name.lower() for c in item.category.all()]))
 
     def item_description(self, item):
         return item.text
     
     def item_link(self, item):
-        return 'http://www.politicsverbatim.org/excerpt/%s/' % str(item.id)
+        return reverse('excerpt_detail', args=[str(item.id)])
 
     def item_pubdate(self,item):
         return item.date_entered
-

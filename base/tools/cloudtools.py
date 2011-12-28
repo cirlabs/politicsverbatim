@@ -41,7 +41,7 @@ class TagCloudMaker:
 
     def make_cloud(self):
         stemdict, tempdict, finaldict = {}, {}, {}
-        stopwords = open('/home/politicsv/django-projects/politicsverbatim/base/tools/stopwords.txt', 'r').read().split('\n')
+        stopwords = open('stopwords.txt', 'r').read().split('\n')
 
         # Extract just the words inside quotes
         quotes = ' '.join(self.extract_quotes())
@@ -79,7 +79,6 @@ class TagCloudMaker:
 
         results = self.process_cloud(8, finaldict.items()[:50])
         return results
-
 
     def make_cloud_template(self):
         results = self.make_cloud()
