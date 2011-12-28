@@ -7,14 +7,9 @@ PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 #CACHE_BACKEND = ''
 #CACHE_MIDDLEWARE_SECONDS = 3
 
-TWITTER_USER = ''
-TWITTER_PASSWORD = ''
-BITLY_USER = ''
-BITLY_API_KEY = ''
 GOOGLE_API_KEY = ''
 FACEBOOK_APP_ID = ''
 FACEBOOK_SECRET_KEY = ''
-AUTO_TWEET = False
 TWEET_PICKLE_PATH = os.path.join(PROJECT_PATH, "scripts/data/tweetpickle.txt")
 
 HAYSTACK_SEARCH_ENGINE = 'whoosh'
