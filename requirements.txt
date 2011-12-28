@@ -1,0 +1,10 @@
+Django==1.2.5
+PIL==1.1.7
+South==0.7.3
+Whoosh==2.3.2
+distribute==0.6.24
+django-haystack==1.1.0
+django-tinymce==1.5.1b2
+geopy==0.94.1
+psycopg2==2.4.4
+wsgiref==0.1.2
