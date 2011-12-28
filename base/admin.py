@@ -1,6 +1,6 @@
 from django.contrib import admin
 from base.models import *
-from utils.tinymce.widgets import TinyMCE
+from tinymce.widgets import TinyMCE
 
 ########## INLINES ##########
 

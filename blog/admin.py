@@ -1,7 +1,8 @@
 from django.contrib import admin
+from django.db import models
 from django.conf import settings
 from blog.models import Post
-from utils.tinymce.widgets import TinyMCE
+from tinymce.widgets import TinyMCE
 
 class PostAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('headline',)}

@@ -1,11 +1,11 @@
-from S3 import CallingFormat
+from backends.S3 import CallingFormat
 
 import os
 gettext = lambda s: s
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 
-CACHE_BACKEND = ''
-CACHE_MIDDLEWARE_SECONDS = 3
+#CACHE_BACKEND = ''
+#CACHE_MIDDLEWARE_SECONDS = 3
 
 TWITTER_USER = ''
 TWITTER_PASSWORD = ''
@@ -17,15 +17,15 @@ FACEBOOK_SECRET_KEY = ''
 AUTO_TWEET = False
 TWEET_PICKLE_PATH = os.path.join(PROJECT_PATH, "scripts/data/tweetpickle.txt")
 
-HAYSTACK_SEARCH_ENGINE = ''
-HAYSTACK_SITECONF = ''
-HAYSTACK_WHOOSH_PATH = ''
-HAYSTACK_DEFAULT_OPERATOR = ''
+HAYSTACK_SEARCH_ENGINE = 'whoosh'
+HAYSTACK_SITECONF = 'search_sites'
+HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_PATH, 'whoosh_index')
+HAYSTACK_DEFAULT_OPERATOR = 'AND'
 
-DEFAULT_FILE_STORAGE = 'backends.s3.S3Storage'
+AWS_STORAGE_BUCKET_NAME = ''
+DEFAULT_FILE_STORAGE = 'backends.s3_backend.S3Storage'
 AWS_ACCESS_KEY_ID = ''
 AWS_SECRET_ACCESS_KEY = ''
-AWS_STORAGE_BUCKET_NAME = ''
 AWS_CALLING_FORMAT = CallingFormat.SUBDOMAIN
 
 ROOT_URLCONF = 'politicsverbatim.urls'

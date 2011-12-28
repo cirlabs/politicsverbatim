@@ -10,7 +10,7 @@ urlpatterns = patterns('',
     # Base URLs
     url(r'^$', 'base.views.homepage', name='homepage'),
     (r'^robots.txt$', 'django.views.generic.simple.direct_to_template',
-     {'template':'robots.txt', 'mimetype':'text/plain'}),
+        {'template':'robots.txt', 'mimetype':'text/plain'}),
     (r'^widget/$', 'base.views.widget'),
                        
     # Admin URLs
@@ -83,3 +83,10 @@ urlpatterns = patterns('',
     # Misc URLs
     url(r'^csv/', 'base.views.timeline_csv', name='csv'),  
 )
+
+if settings.DEBUG:
+    urlpatterns += patterns('',
+        url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+            'document_root': settings.MEDIA_ROOT,
+        }),
+   )

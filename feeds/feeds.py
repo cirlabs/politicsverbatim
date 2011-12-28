@@ -2,13 +2,13 @@ from django.contrib.syndication.views import Feed
 from django.contrib.syndication.views import FeedDoesNotExist
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
-from base.models import Excerpt, Topic, Type
+from base.models import Excerpt
 from events.models import Event
 from blog.models import Post
 
 class LatestExcerptsFeed(Feed):
     title = "Politics Verbatim | Latest excerpts"
-    link = reverse('homepage')
+    link = '/'
     description = "Latest excerpts added to politicsverbatim.org."
 
     def items(self):
@@ -28,7 +28,7 @@ class LatestExcerptsFeed(Feed):
 
 class LatestEventsFeed(Feed):
     title = "Politics Verbatim | Latest events"
-    link = reverse('event_list')
+    link = '/events/'
     description = "Latest events added to politicsverbatim.org."
 
     def items(self):
@@ -48,7 +48,7 @@ class LatestEventsFeed(Feed):
 
 class LatestPostsFeed(Feed):
     title = "Politics Verbatim | On Message blog"
-    link = reverse('blog_home')
+    link = '/blog/'
     description = "Latest blog posts added to On Message."
 
     def items(self):
